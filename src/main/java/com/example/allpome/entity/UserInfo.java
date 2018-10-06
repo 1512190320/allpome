@@ -1,20 +1,10 @@
 package com.example.allpome.entity;
 
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-//@Entity
 public class UserInfo {
     
-    //@Id//主键
-    //@GeneratedValue//自增长
+
     private String UserID;//id
-    //@Column(length = 255)//长度30
-    private String PassWord;//名称
-    //@Column(nullable = false)//不可空
+    private String PassWord;
     private Integer UserFollow;
     private Integer UserFan;
 
