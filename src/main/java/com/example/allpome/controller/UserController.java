@@ -1,7 +1,6 @@
 package com.example.allpome.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 import com.example.allpome.entity.UserInfo;
 import  com.example.allpome.service.UserService;
