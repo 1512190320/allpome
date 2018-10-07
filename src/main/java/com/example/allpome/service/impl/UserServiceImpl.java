@@ -13,6 +13,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 @Service
 public class UserServiceImpl  implements  UserService{
 
@@ -33,5 +34,21 @@ public class UserServiceImpl  implements  UserService{
             return userInfo;
         }
         return null;
+    }
+
+    @Override
+    public void AddUser(String userID, String passWd){
+        String sql = "insert into user_info(user_ID, pass_word) values(?, ?)";
+        jdbcTemplate.update(sql, userID, passWd);
+    }
+    @Override
+    public void DeleteUser(String userID){
+        String sql = "DELETE FROM user_info WHERE user_ID = ?";
+        jdbcTemplate.update(sql, userID);
+    }
+    @Override
+    public void UpdateUser(String userID, String passWd){
+        String sql = "UPDATE user_info SET pass_word = ? WHERE user_ID = ?";
+        jdbcTemplate.update(sql, passWd, userID);
     }
 }

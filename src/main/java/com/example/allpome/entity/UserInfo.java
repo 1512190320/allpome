@@ -1,7 +1,6 @@
 package com.example.allpome.entity;
 
 public class UserInfo {
-    
 
     private String UserID;//id
     private String PassWord;
