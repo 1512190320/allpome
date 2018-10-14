@@ -37,9 +37,9 @@ public class UserServiceImpl  implements  UserService{
     }
 
     @Override
-    public void AddUser(String userID, String passWd){
+    public Integer AddUser(String userID, String passWd){
         String sql = "insert into user_info(user_ID, pass_word) values(?, ?)";
-        jdbcTemplate.update(sql, userID, passWd);
+        return jdbcTemplate.update(sql, userID, passWd);
     }
     @Override
     public void DeleteUser(String userID){

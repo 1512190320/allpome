@@ -19,4 +19,24 @@ public class PoemController {
         System.out.println(title);
         return poemService.GetPoemInfo("poem_title",title);
     }
+    @RequestMapping(value = "/like_poem", method = RequestMethod.POST)
+    public String LikePoem(@RequestParam String PoemID, @RequestParam String UserID)throws Exception{
+        if(poemService.LikePoem(PoemID, UserID)){
+            return UserID + " like " + " poemID:  " + PoemID;
+        }
+        else{
+            poemService.LikePoemCancel(PoemID, UserID);
+            return UserID + " cancel like " + " poemID:  " + PoemID;
+        }
+    }
+    @RequestMapping(value = "/star_poem", method = RequestMethod.POST)
+    public String StarPoem(@RequestParam String PoemID, @RequestParam String UserID)throws Exception{
+        if(poemService.StarPoem(PoemID, UserID)){
+            return UserID + " star " + " poemID:  " + PoemID;
+        }
+        else{
+            poemService.StarPoemCancel(PoemID, UserID);
+            return UserID + " star " + " poemID:  " + PoemID;
+        }
+    }
 }

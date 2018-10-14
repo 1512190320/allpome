@@ -21,53 +21,121 @@ public class PoemServiceImpl implements PoemService{
 
         String tmp = "select * from poem_table where " + Mode + "= \"" + Value +"\"";
         System.out.println(tmp);
-/*
-Value 是UTF8
- */
         Map<String,Object> map=jdbcTemplate.queryForMap(tmp);
 //        Map<String,Object> map=jdbcTemplate.queryForMap("select * from poem_table where ? = ?",Mode,Value);
 
         if(null!=map && map.size()>0) {
-            System.out.println("run2");
             PoemInfo poemInfo = new PoemInfo();
             poemInfo.setPoemID(map.get("poem_ID").toString());
-//            poemInfo.setPoemTitle(map.get("poem_title").toString());
-//            poemInfo.setPoemContent(map.get("poem_content").toString());
-//            poemInfo.setPoemNote(map.get("poem_note").toString());
-//            poemInfo.setPoemTranslation(map.get("poem_translation").toString());
-//
-//            poemInfo.setPoemLike((Integer) map.get("poem_like"));
-//            poemInfo.setPoemStar((Integer) map.get("poem_star"));
-//            poemInfo.setPoemCommentNum((Integer)map.get("poem_comment_num"));
-//
-//            poemInfo.setOri((Integer) map.get("is_ori"));
-//            poemInfo.setPoemHoliday(map.get("poem_holiday").toString());
-//            poemInfo.setPoemSolarTerms(map.get("poem_solar_terms").toString());
-//            poemInfo.setPoemStatement(map.get("poem_statement").toString());
-//
-//            poemInfo.setAuthor_ID(map.get("author_ID").toString());
-//            poemInfo.setUserID(map.get("user_ID").toString());
-//            poemInfo.setVisible((Integer)map.get("is_visible"));
-//
-//            poemInfo.setWritingDate((Date) map.get("writing_date"));
-//            poemInfo.setEditDate((Date) map.get("edit_date"));
+            poemInfo.setPoemTitle(map.get("poem_title").toString());
+            poemInfo.setPoemContent(map.get("poem_content").toString());
 
-            System.out.println("run3");
-            System.out.println(poemInfo);
+            if (null != map.get("poem_note"))
+                poemInfo.setPoemNote(map.get("poem_note").toString());
+            if (null != map.get("poem_translation"))
+                poemInfo.setPoemTranslation(map.get("poem_translation").toString());
+
+            poemInfo.setPoemLike((Integer) map.get("poem_like"));
+            poemInfo.setPoemStar((Integer) map.get("poem_star"));
+            poemInfo.setPoemCommentNum((Integer)map.get("poem_comment_num"));
+
+            if (null != map.get("poem_holiday"))
+                poemInfo.setPoemHoliday(map.get("poem_holiday").toString());
+            if (null != map.get("poem_solar_terms"))
+                poemInfo.setPoemSolarTerms(map.get("poem_solar_terms").toString());
+            if (null != map.get("poem_statement"))
+                poemInfo.setPoemStatement(map.get("poem_statement").toString());
+
+            poemInfo.setIsOri((Integer) map.get("is_ori"));
+            if ((Integer) map.get("is_ori") == 0){
+                /*
+                古诗
+                 */
+                poemInfo.setAuthor_ID(map.get("author_ID").toString());
+            }
+            else{
+                /*
+                原创诗词
+                 */
+                poemInfo.setUserID(map.get("user_ID").toString());
+                poemInfo.setIsVisible((Integer)map.get("is_visible"));
+                poemInfo.setWritingDate((Date) map.get("writing_date"));
+                poemInfo.setEditDate((Date) map.get("edit_date"));
+            }
             return poemInfo;
         }
-        System.out.println("run no");
         return null;
     }
 
     @Override
-    public void LikePoem(String PoemID, String UserID){
+    public Boolean LikePoem(String PoemID, String UserID) throws Exception{
+        try{
+            Map<String,Object> map = jdbcTemplate.queryForMap( "select * from user_like_conn where poem_ID = ? AND user_ID = ?",PoemID,UserID);
+            System.out.println("have like already");
 
+        }catch(Exception e){
+            System.out.println("no like now");
+            // 点赞数增加
+            String sql = "update poem_table set poem_like = poem_like + 1 where poem_ID = ?";
+            jdbcTemplate.update(sql,PoemID);
+            //  在连接表中加入条目
+            sql = "insert into user_like_conn (poem_ID, user_ID) values(?,?)";
+            jdbcTemplate.update(sql,PoemID,UserID);
+            return true;
+        }
+        return false;
     }
 
+    @Override
+    public Boolean LikePoemCancel(String PoemID, String UserID) throws Exception{
+        try{
+            Map<String,Object> map = jdbcTemplate.queryForMap( "select * from user_like_conn where poem_ID = ? AND user_ID = ?",PoemID,UserID);
+            if(null != map){
+                String sql = "update poem_table set poem_like = poem_like - 1 where poem_ID = ?";
+                jdbcTemplate.update(sql,PoemID);
+                //  在连接表中加入条目
+                sql = "delete from user_like_conn where poem_ID = ? AND user_ID = ?";
+                jdbcTemplate.update(sql,PoemID,UserID);
+            }
+
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
 
     @Override
-    public void StarPoem(String PoemID, String UserID) {
+    public Boolean StarPoem(String PoemID, String UserID) throws Exception{
+        try{
+            Map<String,Object> map = jdbcTemplate.queryForMap( "select * from user_star_conn where poem_ID = ? AND user_ID = ?",PoemID,UserID);
+            System.out.println("have star already");
 
+        }catch(Exception e){
+            // 收藏数增加
+            String sql = "update poem_table set poem_star = poem_star + 1 where poem_ID = ?";
+            jdbcTemplate.update(sql,PoemID);
+            //  在连接表中加入条目
+            sql = "insert into user_star_conn (poem_ID, user_ID) values(?,?)";
+            jdbcTemplate.update(sql,PoemID,UserID);
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public Boolean StarPoemCancel(String PoemID, String UserID) throws Exception{
+        try{
+            Map<String,Object> map = jdbcTemplate.queryForMap( "select * from user_star_conn where poem_ID = ? AND user_ID = ?",PoemID,UserID);
+            if(null != map){
+                String sql = "update poem_table set poem_star = poem_star - 1 where poem_ID = ?";
+                jdbcTemplate.update(sql,PoemID);
+                //  在连接表中加入条目
+                sql = "delete from user_star_conn where poem_ID = ? AND user_ID = ?";
+                jdbcTemplate.update(sql,PoemID,UserID);
+            }
+
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 }

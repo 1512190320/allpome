@@ -78,14 +78,6 @@ public class PoemInfo {
         PoemCommentNum = poemCommentNum;
     }
 
-    public Integer isOri() {
-        return isOri;
-    }
-
-    public void setOri(Integer ori) {
-        isOri = ori;
-    }
-
     public String getPoemNote() {
         return PoemNote;
     }
@@ -102,7 +94,7 @@ public class PoemInfo {
         PoemTranslation = poemTranslation;
     }
 
-    public String getPoemoliday() {
+    public String getPoemHoliday() {
         return PoemHoliday;
     }
 
@@ -166,14 +158,21 @@ public class PoemInfo {
         EditDate = editDate;
     }
 
-    public Integer isVisible() {
+    public Integer getIsOri() {
+        return isOri;
+    }
+
+    public void setIsOri(Integer isOri) {
+        this.isOri = isOri;
+    }
+
+    public Integer getIsVisible() {
         return isVisible;
     }
 
-    public void setVisible(Integer visible) {
-        isVisible = visible;
+    public void setIsVisible(Integer isVisible) {
+        this.isVisible = isVisible;
     }
-
 
 
 

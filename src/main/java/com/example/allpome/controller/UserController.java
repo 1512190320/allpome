@@ -28,11 +28,14 @@ public class UserController {
 
     }
     @RequestMapping(value = "/add_user", method = RequestMethod.POST)
-    public void addUser(@RequestParam String user_ID,@RequestParam String pass_wd) {
+    public Integer addUser(@RequestParam String user_ID,@RequestParam String pass_wd) throws Exception {
         // 添加用户
-        //String sql = "insert into t_user(username, password) values(?, ?)";
-        System.out.println("do add");
-        userService.AddUser(user_ID,pass_wd);
+        try{
+            UserInfo userInfo = userService.GetUserInfo(user_ID);
+        }catch (Exception e){
+            return userService.AddUser(user_ID,pass_wd);
+        }
+        return -1;
     }
     @RequestMapping(value = "/delete_user",method = RequestMethod.DELETE)
     public void deleteUser(@RequestParam String user_ID,@RequestParam String pass_wd){

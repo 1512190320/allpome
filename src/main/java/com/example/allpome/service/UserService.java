@@ -11,11 +11,12 @@ public interface UserService {
     UserInfo GetUserInfo(String userID);
 
     /**
-     * 增加用户
+     *
      * @param userID
      * @param passWd
+     * @return
      */
-    void AddUser(String userID, String passWd);
+    Integer AddUser(String userID, String passWd);
 
     /**
      *删除用户
