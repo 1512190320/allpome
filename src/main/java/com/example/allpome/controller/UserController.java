@@ -16,16 +16,15 @@ public class UserController {
     private  UserService userService;
 
     @RequestMapping(value = "/get_user_info", method = RequestMethod.GET)
-    public UserInfo getUserInfo(@RequestParam String user_ID){
+    public UserInfo getUserInfo(@RequestParam String user_ID) throws Exception{
         //System.out.println(user_ID);
-        /**
-            ATTENETIO!!!!
-         */
-        if(userService.GetUserInfo(user_ID) != null)
-            return userService.GetUserInfo(user_ID);
-        else
-            return null;
 
+        try{
+            return userService.GetUserInfo(user_ID);
+        }catch (Exception e){
+
+        }
+        return null;
     }
     @RequestMapping(value = "/add_user", method = RequestMethod.POST)
     public Integer addUser(@RequestParam String user_ID,@RequestParam String pass_wd) throws Exception {

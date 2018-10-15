@@ -1,14 +1,24 @@
 package com.example.allpome.service;
 import com.example.allpome.entity.PoemInfo;
 
+import java.util.List;
+
 public interface PoemService {
     /**
-     * 获取诗词信息
-     * @param Mode PoemID
+     * 获取一首诗词信息
+     * @param PoemID
      * @return PoemInfo
      */
-    PoemInfo GetPoemInfo(String Mode ,String PoemID);
+    PoemInfo GetPoemInfo(String PoemID);
 
+    /**
+     *
+     * @param video_num
+     * @param Mode
+     * @param Value
+     * @return
+     */
+    List<PoemInfo> GetPoems(Integer video_num, String Mode, String Value);
     /**
      * 收藏诗词
      * @param PoemID

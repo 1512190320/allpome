@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import java.nio.charset.Charset;
@@ -16,55 +18,79 @@ public class PoemServiceImpl implements PoemService{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Override
-    public PoemInfo GetPoemInfo(String Mode ,String Value){
+    private PoemInfo setPoemInfo(Map<String,Object> map){
+        PoemInfo poemInfo = new PoemInfo();
+        poemInfo.setPoemID(map.get("poem_ID").toString());
+        poemInfo.setPoemTitle(map.get("poem_title").toString());
+        poemInfo.setPoemContent(map.get("poem_content").toString());
 
-        String tmp = "select * from poem_table where " + Mode + "= \"" + Value +"\"";
-        System.out.println(tmp);
-        Map<String,Object> map=jdbcTemplate.queryForMap(tmp);
-//        Map<String,Object> map=jdbcTemplate.queryForMap("select * from poem_table where ? = ?",Mode,Value);
+        if (null != map.get("poem_note"))
+            poemInfo.setPoemNote(map.get("poem_note").toString());
+        if (null != map.get("poem_translation"))
+            poemInfo.setPoemTranslation(map.get("poem_translation").toString());
 
-        if(null!=map && map.size()>0) {
-            PoemInfo poemInfo = new PoemInfo();
-            poemInfo.setPoemID(map.get("poem_ID").toString());
-            poemInfo.setPoemTitle(map.get("poem_title").toString());
-            poemInfo.setPoemContent(map.get("poem_content").toString());
+        poemInfo.setPoemLike((Integer) map.get("poem_like"));
+        poemInfo.setPoemStar((Integer) map.get("poem_star"));
+        poemInfo.setPoemCommentNum((Integer)map.get("poem_comment_num"));
 
-            if (null != map.get("poem_note"))
-                poemInfo.setPoemNote(map.get("poem_note").toString());
-            if (null != map.get("poem_translation"))
-                poemInfo.setPoemTranslation(map.get("poem_translation").toString());
+        if (null != map.get("poem_holiday"))
+            poemInfo.setPoemHoliday(map.get("poem_holiday").toString());
+        if (null != map.get("poem_solar_terms"))
+            poemInfo.setPoemSolarTerms(map.get("poem_solar_terms").toString());
+        if (null != map.get("poem_statement"))
+            poemInfo.setPoemStatement(map.get("poem_statement").toString());
 
-            poemInfo.setPoemLike((Integer) map.get("poem_like"));
-            poemInfo.setPoemStar((Integer) map.get("poem_star"));
-            poemInfo.setPoemCommentNum((Integer)map.get("poem_comment_num"));
-
-            if (null != map.get("poem_holiday"))
-                poemInfo.setPoemHoliday(map.get("poem_holiday").toString());
-            if (null != map.get("poem_solar_terms"))
-                poemInfo.setPoemSolarTerms(map.get("poem_solar_terms").toString());
-            if (null != map.get("poem_statement"))
-                poemInfo.setPoemStatement(map.get("poem_statement").toString());
-
-            poemInfo.setIsOri((Integer) map.get("is_ori"));
-            if ((Integer) map.get("is_ori") == 0){
+        poemInfo.setIsOri((Integer) map.get("is_ori"));
+        if ((Integer) map.get("is_ori") == 0){
                 /*
                 古诗
                  */
-                poemInfo.setAuthor_ID(map.get("author_ID").toString());
-            }
-            else{
+            poemInfo.setAuthor_ID(map.get("author_ID").toString());
+        }
+        else{
                 /*
                 原创诗词
                  */
-                poemInfo.setUserID(map.get("user_ID").toString());
-                poemInfo.setIsVisible((Integer)map.get("is_visible"));
-                poemInfo.setWritingDate((Date) map.get("writing_date"));
-                poemInfo.setEditDate((Date) map.get("edit_date"));
-            }
+            poemInfo.setUserID(map.get("user_ID").toString());
+            poemInfo.setIsVisible((Integer)map.get("is_visible"));
+            poemInfo.setWritingDate((Date) map.get("writing_date"));
+            poemInfo.setEditDate((Date) map.get("edit_date"));
+        }
+        return poemInfo;
+    }
+
+    @Override
+    public PoemInfo GetPoemInfo(String PoemID){
+
+        String tmp = "select * from poem_table where poem_ID = ?";
+        System.out.println(tmp);
+        Map<String,Object> map=jdbcTemplate.queryForMap(tmp,PoemID);
+//        Map<String,Object> map=jdbcTemplate.queryForMap("select * from poem_table where ? = ?",Mode,Value);
+
+        if(null!=map && map.size()>0) {
+            PoemInfo poemInfo = setPoemInfo(map);
             return poemInfo;
         }
         return null;
+    }
+
+    @Override
+    public List<PoemInfo> GetPoems(Integer poem_num, String Mode, String Value){
+        String tmp = "select * from poem_table where " + Mode + " like ?";
+        //String tmp = "select * from poem_table where ? = ?";
+        System.out.println(tmp);
+        List<PoemInfo> returnList = new ArrayList<>();
+        //List<Map<String,Object>> objList = jdbcTemplate.queryForList(tmp,Mode,Value);
+        Value = "%" + Value + "%";
+        List<Map<String,Object>> objList = jdbcTemplate.queryForList(tmp,Value);
+        //List<Map<String,Object>> objList = jdbcTemplate.queryForList("select * from poem_table where poem_title = ?",Value);
+//        Map<String,Object> map=jdbcTemplate.queryForMap("select * from poem_table where ? = ?",Mode,Value);
+
+        for(Map<String,Object> map : objList){
+            PoemInfo poemInfo = setPoemInfo(map);
+            returnList.add(poemInfo);
+        }
+        return returnList;
     }
 
     @Override
