@@ -75,16 +75,12 @@ public class PoemServiceImpl implements PoemService{
     }
 
     @Override
-    public List<PoemInfo> GetPoems(Integer poem_num, String Mode, String Value){
-        String tmp = "select * from poem_table where " + Mode + " like ?";
-        //String tmp = "select * from poem_table where ? = ?";
+    public List<PoemInfo> GetPoems(Integer poem_num, String Mode, String Value, String isOri){
+        String tmp = "select * from poem_table where " + Mode + " like ? and id_ori = ?";
         System.out.println(tmp);
         List<PoemInfo> returnList = new ArrayList<>();
-        //List<Map<String,Object>> objList = jdbcTemplate.queryForList(tmp,Mode,Value);
         Value = "%" + Value + "%";
-        List<Map<String,Object>> objList = jdbcTemplate.queryForList(tmp,Value);
-        //List<Map<String,Object>> objList = jdbcTemplate.queryForList("select * from poem_table where poem_title = ?",Value);
-//        Map<String,Object> map=jdbcTemplate.queryForMap("select * from poem_table where ? = ?",Mode,Value);
+        List<Map<String,Object>> objList = jdbcTemplate.queryForList(tmp,Value,isOri);
 
         for(Map<String,Object> map : objList){
             PoemInfo poemInfo = setPoemInfo(map);
@@ -92,6 +88,7 @@ public class PoemServiceImpl implements PoemService{
         }
         return returnList;
     }
+
 
     @Override
     public Boolean LikePoem(String PoemID, String UserID) throws Exception{
