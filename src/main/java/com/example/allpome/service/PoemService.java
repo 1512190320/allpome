@@ -16,9 +16,10 @@ public interface PoemService {
      * @param video_num
      * @param Mode
      * @param Value
+     * @param isOri
      * @return
      */
-    List<PoemInfo> GetPoems(Integer video_num, String Mode, String Value);
+    List<PoemInfo> GetPoems(Integer video_num, String Mode, String Value, String isOri);
     /**
      * 收藏诗词
      * @param PoemID
@@ -51,4 +52,12 @@ public interface PoemService {
      * @throws Exception
      */
     Boolean LikePoemCancel(String PoemID, String UserID)throws Exception;
+
+    /**
+     *
+     * @param video_num
+     * @param Mode
+     * @param Value
+     * @return
+     */
 }

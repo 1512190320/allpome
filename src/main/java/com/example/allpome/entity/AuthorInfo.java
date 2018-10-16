@@ -2,8 +2,10 @@ package com.example.allpome.entity;
 
 public class AuthorInfo {
     private String AuthorID;
-    private  String AuthorName;
-    private  String AuthorIntroduce;
+    private String AuthorName;
+    private String AuthorIntroduce;
+
+    private String AuthorDynasty;
 
     public AuthorInfo() {
     }
@@ -28,6 +30,14 @@ public class AuthorInfo {
 
     public void setAuthorName(String authorName) {
         AuthorName = authorName;
+    }
+
+    public String getAuthorDynasty() {
+        return AuthorDynasty;
+    }
+
+    public void setAuthorDynasty(String authorDynasty) {
+        AuthorDynasty = authorDynasty;
     }
 
     public String getAuthorIntroduce() {
