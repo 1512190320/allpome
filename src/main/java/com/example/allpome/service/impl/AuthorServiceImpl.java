@@ -21,7 +21,8 @@ public class AuthorServiceImpl implements AuthorService {
         authorInfo.setAuthorID(map.get("author_ID").toString());
         authorInfo.setAuthorIntroduce(map.get("author_introduce").toString());
         authorInfo.setAuthorName(map.get("author_name").toString());
-        authorInfo.setAuthorDynasty(map.get("author_dynasty").toString());
+        if (null != map.get("author_dynasty"))
+            authorInfo.setAuthorDynasty(map.get("author_dynasty").toString());
 
         return authorInfo;
     }

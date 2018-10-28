@@ -55,9 +55,16 @@ public interface PoemService {
 
     /**
      *
-     * @param video_num
-     * @param Mode
-     * @param Value
+     * @param poemNum
+     * @param RecKey
      * @return
      */
+    List<PoemInfo> GetRecPoem(Integer poemNum,String RecKey, String RecValue);
+
+    /**
+     *
+     * @param AName
+     * @return
+     */
+    List<PoemInfo> GetPoemByAName(String AName);
 }

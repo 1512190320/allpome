@@ -76,7 +76,7 @@ public class PoemServiceImpl implements PoemService{
 
     @Override
     public List<PoemInfo> GetPoems(Integer poem_num, String Mode, String Value, String isOri){
-        String tmp = "select * from poem_table where " + Mode + " like ? and id_ori = ?";
+        String tmp = "select * from poem_table where " + Mode + " like ? and is_ori = ?";
         System.out.println(tmp);
         List<PoemInfo> returnList = new ArrayList<>();
         Value = "%" + Value + "%";
@@ -160,5 +160,34 @@ public class PoemServiceImpl implements PoemService{
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<PoemInfo> GetRecPoem(Integer poemNum,String RecKey, String RecValue){
+        List<PoemInfo> recVideoList = new ArrayList<>();
+
+        List<Map<String,Object>> objList = jdbcTemplate.queryForList("select * from poem_table where ?  like ?  order by poem_like DESC LIMIT 0,?;",RecKey,RecValue,poemNum);
+
+        for(Map<String,Object> map : objList){
+            PoemInfo poemInfo = setPoemInfo(map);
+            recVideoList.add(poemInfo);
+        }
+
+        return recVideoList;
+    }
+
+    @Override
+    public  List<PoemInfo> GetPoemByAName(String AName){
+
+        AName = "%" + AName + "%";
+        String tmp = "select * from poem_table where author_ID like ? ";
+        List<Map<String,Object>> objList = jdbcTemplate.queryForList(tmp,AName);
+        List<PoemInfo> returnList = new ArrayList<>();
+
+        for(Map<String,Object> map : objList){
+            PoemInfo poemInfo = setPoemInfo(map);
+            returnList.add(poemInfo);
+        }
+        return returnList;
     }
 }
