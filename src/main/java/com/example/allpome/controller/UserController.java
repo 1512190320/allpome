@@ -67,4 +67,14 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public boolean login(@RequestParam String user_ID,@RequestParam String pass_wd) throws Exception{
+        try {
+            userService.CheckUser(user_ID,pass_wd);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
 }

@@ -30,4 +30,11 @@ public interface UserService {
      * @param passWd
      */
     void UpdateUser(String userID, String passWd);
+
+    /**
+     *
+     * @param userID
+     * @param passWd
+     */
+    void CheckUser(String userID, String passWd);
 }

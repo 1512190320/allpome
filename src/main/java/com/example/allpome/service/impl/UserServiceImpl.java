@@ -51,4 +51,9 @@ public class UserServiceImpl  implements  UserService{
         String sql = "UPDATE user_info SET pass_word = ? WHERE user_ID = ?";
         jdbcTemplate.update(sql, passWd, userID);
     }
+    @Override
+    public void CheckUser(String userID, String passWd){
+        Map<String,Object> map=jdbcTemplate.queryForMap("select * from user_info where user_ID = ? and pass_word = ?",userID, passWd);
+
+    }
 }
